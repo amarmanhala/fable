@@ -5,6 +5,8 @@ import { AlignCenter, AlignLeft, AlignRight, Star } from "react-feather";
 import BackgroundColorPicker from "./BackgroundColorPicker";
 import { useSelector, useDispatch } from "react-redux";
 import TextAlignment from "./TextAlignment";
+import TextHighlight from "./TextBold";
+import Slider from "./Slider";
 
 
 const EditorNavbar = () => {
@@ -13,7 +15,6 @@ const EditorNavbar = () => {
     "linear-gradient(155.85deg, #DA2CC8 -2.92%, #FF8327 82.65%)"
   );
   const [openTextAlignMenu, setopenTextAlignMenu] = useState(false);
-  const [textHighlight, settextHighlight] = useState(true);
   const textColors = [
     "#fff",
     "#000",
@@ -66,7 +67,7 @@ const EditorNavbar = () => {
                 color={selectedColor}
               ></ColorPicker>
             </div>
-            <div className="px-2">
+            <div className="px-3 flex flex-row rounded">
               <button
                 onClick={() => {
                   setopenTextAlignMenu(!openTextAlignMenu);
@@ -78,18 +79,12 @@ const EditorNavbar = () => {
                 </AlignCenter>
               </button>
             </div>
-            <div className="px-2">
-              <button
-                onClick={() => {
-                  settextHighlight(!textHighlight);
-                  setopenColorMenu(false);
-                }}
-                className={textHighlight ? "bg-white" : "bg-transparent"}
-              >
-                <Star size={28} color={textHighlight ? "black" : "white"}>
-                  {" "}
-                </Star>
-              </button>
+          
+            <div className="px-2 flex flex-row">
+             <TextHighlight></TextHighlight>
+            </div>
+            <div className="px-2 flex flex-row items-center">
+              <Slider></Slider>
             </div>
           </div>
           <div>

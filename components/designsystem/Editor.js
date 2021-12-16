@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, shallowEqual } from "react-redux";
 import EditorNavbar from "./EditorNavbar";
-import TextAlignment from "./TextAlignment";
 
 export default function Main() {
   const getColor = () => {
@@ -10,11 +9,15 @@ export default function Main() {
         editorBackgroundColor: state.editorBackgroundColor,
         textColor: state.textColor,
         textAlignment: state.textAlignment,
+        textHighlighted: state.textHighlighted,
+        textBold: state.textBold,
+        fontSize: state.fontSize,
       }),
       shallowEqual
     );
   };
-  const { editorBackgroundColor, textColor, textAlignment } = getColor();
+  
+  const { editorBackgroundColor, textColor, textAlignment, textBold, fontSize } = getColor();
 
   return (
     <div
@@ -23,11 +26,21 @@ export default function Main() {
     >
       <EditorNavbar></EditorNavbar>
       <div className="flex flex-row h-full px-10 py-4">
-        <textarea
-          className="w-full h-full resize-none text-xl bg-transparent outline-none focus-none"
-          placeholder="Type something..."
-          style={{color: textColor, textAlign: textAlignment}}
-        ></textarea>
+        <div className="container">
+          <div className="overflow-auto">
+            <div
+              className="whitespace-pre-wrap	break-words"
+              id="highlights"
+            ></div>
+          </div>
+          <textarea
+            className={`w-full h-full resize-none bg-transparent outline-none focus-none ${textBold ? 'font-black' : 'font-medium'}`}
+            placeholder="Type something..."
+            style={{ color: textColor, textAlign: textAlignment, fontSize: fontSize + "px"}}
+            id="notes"
+          ></textarea>
+          
+        </div>
       </div>
     </div>
   );

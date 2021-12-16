@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        darkBackground: "#0F1113",
+        darkBackground: "#050505",
         lightBackground: "#FFF",
         darkHeader: "#0F1113",
         lightHeader: "#FCFCFC80",
@@ -21,6 +21,8 @@ module.exports = {
         borderLight: "rgba(229,229,229,1)",
         borderDarkHover: "#3A3A3C",
         borderLightHover: "#D1D1D6",
+        sidebarDark: "#171717",
+        teritary: "rgba(118, 118, 128, 0.24)",
 
       },
       fontFamily: {

@@ -1,68 +1,80 @@
-import { useMemo } from 'react'
-import { createStore, applyMiddleware } from 'redux'
-import { composeWithDevTools } from 'redux-devtools-extension'
+import { useMemo } from "react";
+import { createStore, applyMiddleware } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
 
-let store
+let store;
 
 const initialState = {
   editorBackgroundColor: "transparent",
   textColor: "white",
   textAlignment: "left",
-}
+  textBold: false,
+  fontSize: 20,
+};
 
 const reducer = (state = initialState, action) => {
-    switch (action.type) {
-      case 'CHANGE_EDITOR_BACKGROUND_COLOR':
+  switch (action.type) {
+    case "CHANGE_EDITOR_BACKGROUND_COLOR":
+      return {
+        ...state,
+        editorBackgroundColor: action.payload,
+      };
+    case "CHANGE_TEXT_COLOR":
+      return {
+        ...state,
+        textColor: action.payload,
+      };
+    case "CHANGE_TEXT_ALIGNMENT":
+      return {
+        ...state,
+        textAlignment: action.payload,
+      };
+    case "IS_TEXT_BOLD":
+      return {
+        ...state,
+        textBold: action.payload,
+      };
+      case "FONT_SIZE":
         return {
           ...state,
-          editorBackgroundColor: action.payload,
-        }
-        case 'CHANGE_TEXT_COLOR':
-          return {
-            ...state,
-            textColor: action.payload,
-          }
-          case 'CHANGE_TEXT_ALIGNMENT':
-          return {
-            ...state,
-            textAlignment: action.payload,
-          }
-      default:
-        return state
-    }
+          fontSize: action.payload,
+        };
+    default:
+      return state;
+  }
+};
+
+function initStore(preloadedState = initialState) {
+  return createStore(
+    reducer,
+    preloadedState,
+    composeWithDevTools(applyMiddleware())
+  );
+}
+
+export const initializeStore = (preloadedState) => {
+  let _store = store ?? initStore(preloadedState);
+
+  // After navigating to a page with an initial Redux state, merge that state
+  // with the current state in the store, and create a new store
+  if (preloadedState && store) {
+    _store = initStore({
+      ...store.getState(),
+      ...preloadedState,
+    });
+    // Reset the current store
+    store = undefined;
   }
 
-  function initStore(preloadedState = initialState) {
-    return createStore(
-      reducer,
-      preloadedState,
-      composeWithDevTools(applyMiddleware())
-    )
-  }
-  
-  export const initializeStore = (preloadedState) => {
-    let _store = store ?? initStore(preloadedState)
-  
-    // After navigating to a page with an initial Redux state, merge that state
-    // with the current state in the store, and create a new store
-    if (preloadedState && store) {
-      _store = initStore({
-        ...store.getState(),
-        ...preloadedState,
-      })
-      // Reset the current store
-      store = undefined
-    }
-  
-    // For SSG and SSR always create a new store
-    if (typeof window === 'undefined') return _store
-    // Create the store once in the client
-    if (!store) store = _store
-  
-    return _store
-  }
-  
-  export function useStore(initialState) {
-    const store = useMemo(() => initializeStore(initialState), [initialState])
-    return store
-  }
+  // For SSG and SSR always create a new store
+  if (typeof window === "undefined") return _store;
+  // Create the store once in the client
+  if (!store) store = _store;
+
+  return _store;
+};
+
+export function useStore(initialState) {
+  const store = useMemo(() => initializeStore(initialState), [initialState]);
+  return store;
+}
